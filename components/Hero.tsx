@@ -1,0 +1,135 @@
+
+
+
+"use client";
+
+import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
+
+const slides = [
+  {
+    image: "/img1.jpg",
+    scripture: "For the kingdom of God is not in word, but in power.",
+    ref: "1 Corinthians 4:20",
+  },
+  {
+    image: "/img3.jpg",
+    scripture: "You are a chosen generation, a royal priesthood.",
+    ref: "1 Peter 2:9",
+  },
+  {
+    image: "/img4.jpg",
+    scripture: "Thy kingdom come. Thy will be done on earth.",
+    ref: "Matthew 6:10",
+  },
+];
+
+export default function Hero() {
+  const [index, setIndex] = useState(0);
+
+  // Auto-change slide every 4.5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % slides.length);
+    }, 4500);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <section
+      id="home"
+      className="relative min-h-screen flex items-center justify-center text-center px-6 overflow-hidden"
+    >
+      {/* Background Image Slider */}
+      <AnimatePresence>
+        <motion.div
+          key={index}
+          className="absolute inset-0 bg-cover bg-center will-change-transform"
+          style={{
+            backgroundImage: `url(${slides[index].image})`,
+            filter: "saturate(1.05) contrast(1.05)",
+          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1.4, ease: "easeInOut" }}
+        />
+      </AnimatePresence>
+
+      {/* Premium Overlay Layers */}
+      <div className="absolute inset-0 bg-zenithBlue/60" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/30" />
+      <div className="absolute inset-0 backdrop-brightness-90 backdrop-contrast-110" />
+
+      {/* Content */}
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, ease: "easeOut" }}
+        className="relative z-10 max-w-4xl drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]"
+      >
+        <h1 className="text-4xl md:text-6xl font-bold leading-tight text-white">
+          Raising a{" "}
+          <span className="text-zenithGold">Zenith Generation</span>{" "}
+          in Christ
+        </h1>
+
+        {/* Identity Line */}
+        <p className="mt-3 text-zenithGold tracking-wide uppercase text-sm">
+          The Kingdom Ambassadors
+        </p>
+
+        {/* Scripture */}
+        <AnimatePresence mode="wait">
+          <motion.blockquote
+            key={index}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.6 }}
+            className="mt-6 text-white/90 text-lg italic"
+          >
+            “{slides[index].scripture}”
+            <span className="block mt-2 text-sm text-white/70 not-italic">
+              — {slides[index].ref}
+            </span>
+          </motion.blockquote>
+        </AnimatePresence>
+
+        <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#worship"
+            className="px-8 py-3 bg-zenithGold text-black font-semibold rounded-md"
+          >
+            Join Us This Sunday
+          </a>
+
+          <a
+            href="#about"
+            className="px-8 py-3 text-white border border-white/30 rounded-md hover:border-zenithGold transition"
+          >
+            Learn More
+          </a>
+        </div>
+      </motion.div>
+
+      {/* Slide Indicators */}
+      <div className="absolute bottom-10 z-10 flex gap-3">
+        {slides.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setIndex(i)}
+            aria-label={`Go to slide ${i + 1}`}
+            className={`h-2.5 w-2.5 rounded-full transition-all duration-300
+              ${
+                index === i
+                  ? "bg-zenithGold scale-110"
+                  : "bg-white/50 hover:bg-white/80"
+              }`}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
