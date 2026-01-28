@@ -5,6 +5,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
+import NextProgramBadge from "../components/NextProgramBadge";
 
 const slides = [
   {
@@ -62,12 +63,12 @@ export default function Hero() {
       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/30" />
       <div className="absolute inset-0 backdrop-brightness-90 backdrop-contrast-110" />
 
-      {/* Content */}
+      {/* Hero Content */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: "easeOut" }}
-        className="relative z-10 max-w-4xl drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]"
+        className="relative z-20 max-w-4xl drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]"
       >
         <h1 className="text-4xl md:text-6xl font-bold leading-tight text-white">
           Raising a{" "}
@@ -80,7 +81,7 @@ export default function Hero() {
           The Kingdom Ambassadors
         </p>
 
-        {/* Scripture */}
+        {/* Scripture Carousel */}
         <AnimatePresence mode="wait">
           <motion.blockquote
             key={index}
@@ -97,10 +98,11 @@ export default function Hero() {
           </motion.blockquote>
         </AnimatePresence>
 
+        {/* CTAs */}
         <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
           <a
             href="#worship"
-            className="px-8 py-3 bg-zenithGold text-black font-semibold rounded-md"
+            className="px-8 py-3 bg-zenithGold text-black font-semibold rounded-md hover:opacity-90 transition"
           >
             Join Us This Sunday
           </a>
@@ -115,7 +117,7 @@ export default function Hero() {
       </motion.div>
 
       {/* Slide Indicators */}
-      <div className="absolute bottom-10 z-10 flex gap-3">
+      <div className="absolute bottom-10 z-20 flex gap-3">
         {slides.map((_, i) => (
           <button
             key={i}
@@ -130,6 +132,9 @@ export default function Hero() {
           />
         ))}
       </div>
+
+      {/* 🔔 Smart Next Program Badge */}
+      <NextProgramBadge />
     </section>
   );
 }
