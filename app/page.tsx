@@ -10,6 +10,8 @@ import Footer from "../components/Footer";
 
 import UpcomingProgramsSection from "../components/UpcomingProgramsSection";
 import OutreachSection from "../components/OutreachSection";
+import NewHereSection from "../components/NewHereSection";
+import TestimoniesSection from "../components/TestimoniesSection";
 
 
 
@@ -20,12 +22,14 @@ export default function Page() {
     <>
       <Navbar />
       <Hero />
+      {/* <NewHereSection />  */}
       <AboutSection />
       
     
       {/* <PastorSection /> */}
       <WorshipSection />
       <LiveStreamSection />
+      <TestimoniesSection />
       <UpcomingProgramsSection />
       <OutreachSection />
       

@@ -27,6 +27,9 @@ export default function AdminSidebar() {
         <Link href="/admin/gallery" className="hover:text-zenithGold">
           Gallery
         </Link>
+        <Link href="/admin/testimonies" className="hover:text-zenithGold">
+          Testimonies
+        </Link>
       </nav>
 
       <button

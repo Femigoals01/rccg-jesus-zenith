@@ -31,6 +31,16 @@ export default function AdminDashboard() {
             Upload & manage photo albums
           </p>
         </a>
+
+         <a
+          href="/admin/testimonies"
+          className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-zenithGold transition"
+        >
+          <h3 className="font-semibold mb-2">Testimonies</h3>
+          <p className="text-sm text-white/60">
+            Upload & manage testimonies
+          </p>
+        </a>
       </div>
     </div>
   );
