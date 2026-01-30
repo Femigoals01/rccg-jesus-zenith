@@ -112,7 +112,7 @@ const messages = isLive
 
 
   return (
-    <Link href="#programs">
+    <Link href="/programs">
       <motion.div
         // className={`fixed z-40
         //   bottom-4 sm:bottom-6
