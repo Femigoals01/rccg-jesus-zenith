@@ -169,12 +169,12 @@ const slides = [
 /* ---------------- HERO TEXTS ---------------- */
 const heroTexts = [
   {
-    full: "Raising a Zenith Generation in Christ",
-    highlight: "Zenith Generation",
-  },
-  {
     full: "Welcome to RCCG Jesus Zenith",
     highlight: "RCCG Jesus Zenith",
+  },
+  {
+    full: "Raising a Zenith Generation in Christ",
+    highlight: "Zenith Generation ",
   },
 ];
 
@@ -206,7 +206,7 @@ export default function Hero() {
         }, 120); // 👈 slow typing
         return () => clearTimeout(t);
       } else {
-        const hold = setTimeout(() => setTyping(false), 5000);
+        const hold = setTimeout(() => setTyping(false), 3000);
         return () => clearTimeout(hold);
       }
     } else {
