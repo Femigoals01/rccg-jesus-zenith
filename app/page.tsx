@@ -13,6 +13,8 @@ import OutreachSection from "../components/OutreachSection";
 import NewHereSection from "../components/NewHereSection";
 import TestimoniesSection from "../components/TestimoniesSection";
 
+import FoodBankSection from "../components/FoodBankSession";
+
 
 
 
@@ -32,7 +34,7 @@ export default function Page() {
       <TestimoniesSection />
       <UpcomingProgramsSection />
       <OutreachSection />
-      
+      <FoodBankSection />
       <MinistriesSection />
       <GivingSection />
       <Footer />

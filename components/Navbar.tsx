@@ -14,6 +14,7 @@ export default function Navbar() {
 //   { name: "Pastor", href: "#pastor" },
   { name: "Worship", href: "#worship" },
   { name: "Ministries", href: "#ministries" },
+  { name: "Foodbank", href: "/food-bank" },
   { name: "Gallery", href: "/gallery" }, // ✅ ADD HERE
   { name: "Contact", href: "/contact" },
 ];
