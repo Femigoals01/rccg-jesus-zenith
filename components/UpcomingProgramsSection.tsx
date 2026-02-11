@@ -60,7 +60,7 @@ export default function UpcomingProgramsSection() {
   );
 
   return (
-    <section id="programs" className="py-10 px-6 bg-zenithBlue">
+    <section id="programs" className="py-10 px-6 bg-zenithDeep">
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}
@@ -162,7 +162,7 @@ export default function UpcomingProgramsSection() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1, duration: 0.4 }}
-                  className="bg-white/5 border border-white/10 rounded-lg p-4 hover:border-zenithGold transition"
+                  className="bg-white/5 border border-white/10 rounded-lg p-4 hover:border-zenithGold transition text-zenithGold"
                 >
                   <h4 className="text-base font-semibold">
                     {p.title}

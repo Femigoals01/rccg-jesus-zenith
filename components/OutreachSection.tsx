@@ -7,7 +7,7 @@ import Image from "next/image";
 
 export default function OutreachSection() {
   return (
-    <section id="outreach" className="py-28 px-6 bg-zenithDeep">
+    <section id="outreach" className="py-28 px-6 bg-zenithBlue">
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}
@@ -30,7 +30,7 @@ export default function OutreachSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
           >
-            <h3 className="text-2xl font-semibold mb-6">
+            <h3 className="text-2xl font-semibold mb-6 text-white">
               Reaching Lives, Transforming Communities
             </h3>
 
@@ -111,11 +111,11 @@ export default function OutreachSection() {
 
         {/* MONTHLY HIGHLIGHTS */}
         <div className="mt-24">
-          <h3 className="text-2xl font-bold mb-10 text-center">
+          <h3 className="text-2xl font-bold mb-10 text-center text-white">
             Outreach Highlights
           </h3>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-8 text-zenithGold">
             {[
               {
                 title: "April Outreach",
@@ -143,7 +143,7 @@ export default function OutreachSection() {
 
         {/* VIDEO RECAP */}
         <div className="mt-8 text-center">
-          <h3 className="text-2xl font-bold mb-6">
+          <h3 className="text-2xl font-bold mb-6 text-white">
             Outreach Video Recap
           </h3>
 
@@ -165,7 +165,7 @@ export default function OutreachSection() {
         <div className="mt-10 text-center">
           <a
             href="/outreach"
-            className="inline-block px-8 py-3 bg-white/10 border border-white/20 rounded-md hover:border-zenithGold transition"
+            className="inline-block px-8 py-3 bg-white/10 border border-white/20 rounded-md hover:border-zenithGold transition text-zenithGold"
           >
             View Outreach Gallery →
           </a>
