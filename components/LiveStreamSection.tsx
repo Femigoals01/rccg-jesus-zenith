@@ -62,6 +62,8 @@ export default function LiveStreamSection() {
               <iframe
                 className="w-full h-full"
                 src="https://www.youtube.com/embed/live_stream?channel=UCwZYZTcF53SocT1RLgRLT4Q"
+
+                
                 title="RCCG Jesus Zenith Live Stream"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
@@ -76,7 +78,12 @@ export default function LiveStreamSection() {
                 </p>
 
                 <a
-                  href="https://www.youtube.com/@wearerccgjesuszenith"
+                  href="https://www.youtube.com/@RCCGJESUSZENITH"
+
+
+                  
+
+
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-block px-6 py-3 bg-zenithGold text-black font-semibold rounded-md"

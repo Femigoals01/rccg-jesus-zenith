@@ -1,45 +1,5 @@
 
 
-// "use client";
-
-// import { useEffect, useState } from "react";
-
-// export default function AdminInbox() {
-//   const [messages, setMessages] = useState<any[]>([]);
-
-//   useEffect(() => {
-//     fetch("/api/admin/inbox")
-//       .then((r) => r.json())
-//       .then(setMessages);
-//   }, []);
-
-//   return (
-//     <section className="min-h-screen bg-zenithDeep px-6 py-24">
-//       <h1 className="text-3xl font-bold mb-8">📥 Admin Inbox</h1>
-
-//       <div className="space-y-6 max-w-4xl">
-//         {messages.map((msg) => (
-//           <div
-//             key={msg.id}
-//             className="bg-white/5 border border-white/10 rounded-xl p-6"
-//           >
-//             <p className="text-sm text-zenithGold mb-1">
-//               {msg.type.toUpperCase()}
-//             </p>
-//             <h3 className="font-semibold">{msg.name}</h3>
-//             <p className="text-white/60 text-sm">{msg.email}</p>
-//             <p className="mt-4 text-white/80">{msg.message}</p>
-//             <p className="mt-4 text-xs text-white/40">
-//               {new Date(msg.date).toLocaleString()}
-//             </p>
-            
-//           </div>
-//         ))}
-//       </div>
-//     </section>
-//   );
-// }
-
 
 
 
@@ -158,6 +118,27 @@ export default function AdminInbox() {
               >
                 Delete
               </button>
+
+
+              <button
+  onClick={async () => {
+    const res = await fetch("/api/admin/inbox/archive", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: msg.id }),
+    });
+
+    if (!res.ok) {
+      alert("Failed to archive message");
+      return;
+    }
+
+    setMessages((m) => m.filter((x) => x.id !== msg.id));
+  }}
+  className="text-yellow-400 hover:underline"
+>
+  Archive
+</button>
             </div>
           </div>
         ))}

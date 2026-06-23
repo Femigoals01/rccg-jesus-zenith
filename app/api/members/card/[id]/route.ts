@@ -1,14 +1,15 @@
 
 
 
+
 // import { NextResponse } from "next/server";
 // import fs from "fs";
 // import path from "path";
 // import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
+// import { supabase } from "../../../../../lib/supabase";
 
 // export const runtime = "nodejs";
-
-// const membersPath = path.join(process.cwd(), "data/members.json");
+// export const dynamic = "force-dynamic";
 
 // export async function GET(
 //   req: Request,
@@ -16,24 +17,29 @@
 // ) {
 //   const { id } = await context.params;
 
-//   if (!fs.existsSync(membersPath)) {
-//     return NextResponse.json({ error: "No members found" }, { status: 404 });
-//   }
+//   const { data: member, error } = await supabase
+//     .from("members")
+//     .select("*")
+//     .eq("id", id)
+//     .single();
 
-//   const members = JSON.parse(fs.readFileSync(membersPath, "utf-8"));
-//   const member = members.find((m: any) => m.id === id);
-
-//   if (!member) {
-//     return NextResponse.json({ error: "Member not found" }, { status: 404 });
+//   if (error || !member) {
+//     return NextResponse.json(
+//       { error: "Member not found" },
+//       { status: 404 }
+//     );
 //   }
 
 //   /* ---------------- CREATE PDF ---------------- */
 //   const pdfDoc = await PDFDocument.create();
-//   const page = pdfDoc.addPage([350, 220]);
+//   const page = pdfDoc.addPage([400, 250]);
 //   const { width, height } = page.getSize();
 
 //   const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 //   const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+//   const gold = rgb(0.85, 0.65, 0.13);
+//   const deepBlue = rgb(0.05, 0.1, 0.25);
 
 //   /* ---------------- BACKGROUND ---------------- */
 //   page.drawRectangle({
@@ -41,101 +47,144 @@
 //     y: 0,
 //     width,
 //     height,
-//     color: rgb(0.05, 0.1, 0.25), // Deep blue
+//     color: deepBlue,
 //   });
 
-//   /* ---------------- GOLD HEADER ---------------- */
+//   /* ---------------- HEADER BAR ---------------- */
 //   page.drawRectangle({
 //     x: 0,
-//     y: height - 40,
+//     y: height - 50,
 //     width,
-//     height: 40,
-//     color: rgb(0.8, 0.65, 0),
+//     height: 50,
+//     color: gold,
 //   });
 
+//   /* ---------------- LOGO ---------------- */
+//   try {
+//     const logoPath = path.join(process.cwd(), "public", "logo.png");
+
+//     if (fs.existsSync(logoPath)) {
+//       const logoBytes = fs.readFileSync(logoPath);
+
+//       let logoImage;
+//       try {
+//         logoImage = await pdfDoc.embedPng(logoBytes);
+//       } catch {
+//         logoImage = await pdfDoc.embedJpg(logoBytes);
+//       }
+
+//       page.drawImage(logoImage, {
+//         x: 20,
+//         y: height - 45,
+//         width: 35,
+//         height: 35,
+//       });
+//     }
+//   } catch {
+//     console.log("Logo not loaded");
+//   }
+
+//   /* ---------------- CHURCH NAME ---------------- */
 //   page.drawText("RCCG JESUS ZENITH", {
-//     x: 20,
-//     y: height - 28,
-//     size: 14,
+//     x: 70,
+//     y: height - 32,
+//     size: 16,
 //     font: fontBold,
 //     color: rgb(0, 0, 0),
 //   });
 
 //   /* ---------------- MEMBER PHOTO ---------------- */
 //   if (member.photo) {
-//     const photoBytes = await fetch(member.photo).then(res => res.arrayBuffer());
-//     const photoImage = await pdfDoc.embedJpg(photoBytes).catch(async () =>
-//       pdfDoc.embedPng(photoBytes)
-//     );
+//     try {
+//       const photoBytes = await fetch(member.photo).then((res) =>
+//         res.arrayBuffer()
+//       );
 
-//     page.drawImage(photoImage, {
-//       x: 20,
-//       y: 70,
-//       width: 70,
-//       height: 70,
-//     });
+//       let photoImage;
+//       try {
+//         photoImage = await pdfDoc.embedJpg(photoBytes);
+//       } catch {
+//         photoImage = await pdfDoc.embedPng(photoBytes);
+//       }
+
+//       page.drawImage(photoImage, {
+//         x: 20,
+//         y: 80,
+//         width: 90,
+//         height: 90,
+//       });
+//     } catch {
+//       console.log("Photo not loaded");
+//     }
 //   }
 
 //   /* ---------------- MEMBER DETAILS ---------------- */
-//   page.drawText(`Name: ${member.name}`, {
-//     x: 110,
-//     y: 150,
-//     size: 10,
+//   const startY = 170;
+//   const gap = 18;
+
+//   page.drawText(`Name: ${member.name || "—"}`, {
+//     x: 130,
+//     y: startY,
+//     size: 11,
 //     font,
 //     color: rgb(1, 1, 1),
 //   });
 
 //   page.drawText(`Email: ${member.email || "—"}`, {
-//     x: 110,
-//     y: 135,
-//     size: 10,
+//     x: 130,
+//     y: startY - gap,
+//     size: 11,
 //     font,
 //     color: rgb(1, 1, 1),
 //   });
 
-//   page.drawText(`Phone: ${member.phone}`, {
-//     x: 110,
-//     y: 120,
-//     size: 10,
+//   page.drawText(`Phone: ${member.phone || "—"}`, {
+//     x: 130,
+//     y: startY - gap * 2,
+//     size: 11,
 //     font,
 //     color: rgb(1, 1, 1),
 //   });
 
-//   page.drawText(
-//     `Birthday: ${member.birthDay}/${member.birthMonth}`,
-//     {
-//       x: 110,
-//       y: 105,
-//       size: 10,
-//       font,
-//       color: rgb(1, 1, 1),
-//     }
-//   );
+//   page.drawText(`Birthday: ${member.birth_day || "—"}/${member.birth_month || "—"}`, {
+//     x: 130,
+//     y: startY - gap * 3,
+//     size: 11,
+//     font,
+//     color: rgb(1, 1, 1),
+//   });
 
-//   page.drawText(`Group: ${member.group || "—"}`, {
-//   x: 110,
-//   y: 90,
-//   size: 10,
-//   font,
-//   color: rgb(1, 1, 1),
-// });
+//   page.drawText(`Group: ${member.group_name || "—"}`, {
+//     x: 130,
+//     y: startY - gap * 4,
+//     size: 11,
+//     font,
+//     color: rgb(1, 1, 1),
+//   });
 
-// page.drawText(`Department: ${member.department || "—"}`, {
-//   x: 110,
-//   y: 75,
-//   size: 10,
-//   font,
-//   color: rgb(1, 1, 1),
-// });
-
+//   page.drawText(`Department: ${member.department || "—"}`, {
+//     x: 130,
+//     y: startY - gap * 5,
+//     size: 11,
+//     font,
+//     color: rgb(1, 1, 1),
+//   });
 
 //   /* ---------------- FOOTER ---------------- */
 //   page.drawText("Kingdom Ambassador", {
 //     x: 20,
 //     y: 30,
-//     size: 9,
+//     size: 10,
 //     font: fontBold,
-//     color: rgb(0.8, 0.65, 0),
+//     color: gold,
+//   });
+
+//   page.drawText(`Member ID: ${member.id}`, {
+//     x: width - 180,
+//     y: 30,
+//     size: 9,
+//     font,
+//     color: rgb(1, 1, 1),
 //   });
 
 //   const pdfBytes = await pdfDoc.save();
@@ -150,14 +199,17 @@
 // }
 
 
+
+
 import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
+import QRCode from "qrcode";
+import { supabase } from "../../../../../lib/supabase";
 
 export const runtime = "nodejs";
-
-const membersPath = path.join(process.cwd(), "data/members.json");
+export const dynamic = "force-dynamic";
 
 export async function GET(
   req: Request,
@@ -165,18 +217,19 @@ export async function GET(
 ) {
   const { id } = await context.params;
 
-  if (!fs.existsSync(membersPath)) {
-    return NextResponse.json({ error: "No members found" }, { status: 404 });
+  const { data: member, error } = await supabase
+    .from("members")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error || !member) {
+    return NextResponse.json(
+      { error: "Member not found" },
+      { status: 404 }
+    );
   }
 
-  const members = JSON.parse(fs.readFileSync(membersPath, "utf-8"));
-  const member = members.find((m: any) => m.id === id);
-
-  if (!member) {
-    return NextResponse.json({ error: "Member not found" }, { status: 404 });
-  }
-
-  /* ---------------- CREATE PDF ---------------- */
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage([400, 250]);
   const { width, height } = page.getSize();
@@ -187,7 +240,6 @@ export async function GET(
   const gold = rgb(0.85, 0.65, 0.13);
   const deepBlue = rgb(0.05, 0.1, 0.25);
 
-  /* ---------------- BACKGROUND ---------------- */
   page.drawRectangle({
     x: 0,
     y: 0,
@@ -196,7 +248,6 @@ export async function GET(
     color: deepBlue,
   });
 
-  /* ---------------- HEADER BAR ---------------- */
   page.drawRectangle({
     x: 0,
     y: height - 50,
@@ -205,12 +256,18 @@ export async function GET(
     color: gold,
   });
 
-  /* ---------------- LOGO ---------------- */
   try {
-    const logoPath = path.join(process.cwd(), "public/logo.png");
+    const logoPath = path.join(process.cwd(), "public", "logo.png");
+
     if (fs.existsSync(logoPath)) {
       const logoBytes = fs.readFileSync(logoPath);
-      const logoImage = await pdfDoc.embedPng(logoBytes);
+
+      let logoImage;
+      try {
+        logoImage = await pdfDoc.embedPng(logoBytes);
+      } catch {
+        logoImage = await pdfDoc.embedJpg(logoBytes);
+      }
 
       page.drawImage(logoImage, {
         x: 20,
@@ -219,11 +276,10 @@ export async function GET(
         height: 35,
       });
     }
-  } catch (err) {
+  } catch {
     console.log("Logo not loaded");
   }
 
-  /* ---------------- CHURCH NAME ---------------- */
   page.drawText("RCCG JESUS ZENITH", {
     x: 70,
     y: height - 32,
@@ -232,15 +288,13 @@ export async function GET(
     color: rgb(0, 0, 0),
   });
 
-  /* ---------------- MEMBER PHOTO ---------------- */
   if (member.photo) {
     try {
-      const photoBytes = await fetch(member.photo).then(res =>
+      const photoBytes = await fetch(member.photo).then((res) =>
         res.arrayBuffer()
       );
 
       let photoImage;
-
       try {
         photoImage = await pdfDoc.embedJpg(photoBytes);
       } catch {
@@ -253,16 +307,15 @@ export async function GET(
         width: 90,
         height: 90,
       });
-    } catch (err) {
+    } catch {
       console.log("Photo not loaded");
     }
   }
 
-  /* ---------------- MEMBER DETAILS ---------------- */
   const startY = 170;
   const gap = 18;
 
-  page.drawText(`Name: ${member.name}`, {
+  page.drawText(`Name: ${member.name || "—"}`, {
     x: 130,
     y: startY,
     size: 11,
@@ -278,7 +331,7 @@ export async function GET(
     color: rgb(1, 1, 1),
   });
 
-  page.drawText(`Phone: ${member.phone}`, {
+  page.drawText(`Phone: ${member.phone || "—"}`, {
     x: 130,
     y: startY - gap * 2,
     size: 11,
@@ -287,7 +340,7 @@ export async function GET(
   });
 
   page.drawText(
-    `Birthday: ${member.birthDay}/${member.birthMonth}`,
+    `Birthday: ${member.birth_day || "—"}/${member.birth_month || "—"}`,
     {
       x: 130,
       y: startY - gap * 3,
@@ -297,7 +350,7 @@ export async function GET(
     }
   );
 
-  page.drawText(`Group: ${member.group || "—"}`, {
+  page.drawText(`Group: ${member.group_name || "—"}`, {
     x: 130,
     y: startY - gap * 4,
     size: 11,
@@ -313,7 +366,33 @@ export async function GET(
     color: rgb(1, 1, 1),
   });
 
-  /* ---------------- FOOTER ---------------- */
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const profileUrl = `${siteUrl}/members/${member.id}`;
+
+  try {
+    const qrDataUrl = await QRCode.toDataURL(profileUrl);
+    const qrBase64 = qrDataUrl.replace(/^data:image\/png;base64,/, "");
+    const qrBytes = Buffer.from(qrBase64, "base64");
+    const qrImage = await pdfDoc.embedPng(qrBytes);
+
+    page.drawImage(qrImage, {
+      x: width - 80,
+      y: 55,
+      width: 55,
+      height: 55,
+    });
+
+    page.drawText("Scan Profile", {
+      x: width - 83,
+      y: 45,
+      size: 7,
+      font,
+      color: rgb(1, 1, 1),
+    });
+  } catch {
+    console.log("QR not loaded");
+  }
+
   page.drawText("Kingdom Ambassador", {
     x: 20,
     y: 30,

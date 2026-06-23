@@ -82,7 +82,7 @@ export default function OutreachSection() {
           >
             <div className="relative h-48 rounded-xl overflow-hidden">
               <Image
-                src="/prison1.jpg"
+                src="/fed5.jpeg"
                 alt="Community Outreach"
                 fill
                 className="object-cover"
@@ -91,7 +91,7 @@ export default function OutreachSection() {
 
             <div className="relative h-48 rounded-xl overflow-hidden">
               <Image
-                src="/hospt2.jpg"
+                src="/fed4.jpeg"
                 alt="Evangelism Outreach"
                 fill
                 className="object-cover"
@@ -100,7 +100,7 @@ export default function OutreachSection() {
 
             <div className="relative col-span-2 h-56 rounded-xl overflow-hidden">
               <Image
-                src="/ophan2.jpg"
+                src="/fed3.jpeg"
                 alt="RCCG Jesus Zenith Outreach"
                 fill
                 className="object-cover"
@@ -149,7 +149,9 @@ export default function OutreachSection() {
 
           <div className="max-w-4xl mx-auto aspect-video rounded-xl overflow-hidden border border-white/10">
             <iframe
-              src="https://www.youtube.com/embed/VIDEO_ID"
+              src="https://www.youtube.com/embed/0-siuAJgH8M"
+
+              
               title="Outreach Video"
               className="w-full h-full"
               allowFullScreen

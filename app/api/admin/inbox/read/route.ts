@@ -1,19 +1,25 @@
 
-import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
 
-const inboxPath = path.join(process.cwd(), "data/inbox.json");
+
+
+
+
+import { NextResponse } from "next/server";
+import { supabase } from "../../../../../lib/supabase";
+
+export const runtime = "nodejs";
 
 export async function POST(req: Request) {
   const { id } = await req.json();
 
-  const data = JSON.parse(fs.readFileSync(inboxPath, "utf-8"));
-  const updated = data.map((m: any) =>
-    m.id === id ? { ...m, read: true } : m
-  );
+  const { error } = await supabase
+    .from("inbox")
+    .update({ read: true })
+    .eq("id", id);
 
-  fs.writeFileSync(inboxPath, JSON.stringify(updated, null, 2));
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 
   return NextResponse.json({ success: true });
 }

@@ -1,49 +1,101 @@
 
 
+
+
+// import { NextResponse } from "next/server";
+// import { supabase } from "../../../lib/supabase";
+
+// export const runtime = "nodejs";
+// export const dynamic = "force-dynamic";
+
+// export async function GET() {
+//   const { data, error } = await supabase
+//     .from("testimonies")
+//     .select("*")
+//     .eq("approved", true)
+//     .order("created_at", { ascending: false });
+
+//   if (error) {
+//     return NextResponse.json({ error: error.message }, { status: 500 });
+//   }
+
+//   return NextResponse.json(data || [], {
+//     headers: { "Cache-Control": "no-store" },
+//   });
+// }
+
+// export async function POST(req: Request) {
+//   const body = await req.json();
+//   const { name, title, category, text } = body;
+
+//   if (!name || !title || !text) {
+//     return NextResponse.json(
+//       { error: "Missing required fields" },
+//       { status: 400 }
+//     );
+//   }
+
+//   const { error } = await supabase.from("testimonies").insert({
+//     name,
+//     title,
+//     category: category || "",
+//     text,
+//     approved: true,
+//   });
+
+//   if (error) {
+//     return NextResponse.json({ error: error.message }, { status: 500 });
+//   }
+
+//   return NextResponse.json({ success: true });
+// }
+
+
+
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
+import { supabase } from "../../../lib/supabase";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const filePath = path.join(process.cwd(), "data/testimonies.json");
-
-function readData() {
-  if (!fs.existsSync(filePath)) return [];
-  return JSON.parse(fs.readFileSync(filePath, "utf-8"));
-}
-
-function writeData(data: any) {
-  fs.mkdirSync(path.dirname(filePath), { recursive: true });
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
-}
-
-/* -------- GET (Public) -------- */
 export async function GET() {
-  return NextResponse.json(readData());
+  const { data, error } = await supabase
+    .from("testimonies")
+    .select("*")
+    .eq("approved", true)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json(data || [], {
+    headers: { "Cache-Control": "no-store" },
+  });
 }
 
-/* -------- POST (Admin) -------- */
 export async function POST(req: Request) {
   const body = await req.json();
-  const data = readData();
+  const { name, title, category, text } = body;
 
-  data.unshift({
-    id: Date.now(),
-    ...body,
-    createdAt: new Date().toISOString(),
+  if (!name || !title || !text) {
+    return NextResponse.json(
+      { error: "Missing required fields" },
+      { status: 400 }
+    );
+  }
+
+  const { error } = await supabase.from("testimonies").insert({
+    name,
+    title,
+    category: category || "",
+    text,
+    approved: true,
   });
 
-  writeData(data);
-  return NextResponse.json({ success: true });
-}
-
-/* -------- DELETE (Admin) -------- */
-export async function DELETE(req: Request) {
-  const { id } = await req.json();
-  const data = readData().filter((t: any) => t.id !== id);
-  writeData(data);
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 
   return NextResponse.json({ success: true });
 }

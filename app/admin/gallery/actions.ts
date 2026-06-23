@@ -1,3 +1,8 @@
+
+
+
+
+
 export async function deleteAlbum(groupId: string) {
   const res = await fetch("/api/gallery/delete", {
     method: "POST",

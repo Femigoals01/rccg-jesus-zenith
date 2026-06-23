@@ -1,18 +1,60 @@
+
+
+// import { NextResponse } from "next/server";
 // import fs from "fs";
 // import path from "path";
 
+// export const runtime = "nodejs";
+
+// const membersPath = path.join(process.cwd(), "data/members.json");
+
 // export async function GET() {
-//   const filePath = path.join(process.cwd(), "data/members.json");
-//   if (!fs.existsSync(filePath)) return new Response("");
+//   if (!fs.existsSync(membersPath)) {
+//     return NextResponse.json({ error: "No members found" }, { status: 404 });
+//   }
 
-//   const members = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+//   const members = JSON.parse(fs.readFileSync(membersPath, "utf-8"));
+
+//   if (!members.length) {
+//     return NextResponse.json({ error: "No members found" }, { status: 404 });
+//   }
+
+//   const headers = [
+//     "ID",
+//     "Name",
+//     "Email",
+//     "Phone",
+//     "Address",
+//     "Birthday Day",
+//     "Birthday Month",
+//     "Anniversary",
+//     "Group",
+//     "Department",
+//     "Active",
+//     "Joined Date",
+//   ];
+
+//   const rows = members.map((m: any) => [
+//     m.id,
+//     m.name,
+//     m.email || "",
+//     m.phone || "",
+//     m.address || "",
+//     m.birthDay || "",
+//     m.birthMonth || "",
+//     m.anniversary || "",
+//     m.group || "",
+//     m.department || "",
+//     m.isActive ? "Yes" : "No",
+//     m.createdAt,
+//   ]);
+
 //   const csv =
-//     "Name,Phone,BirthDay,BirthMonth\n" +
-//     members.map((m: any) =>
-//       `${m.name},${m.phone},${m.birthDay},${m.birthMonth}`
-//     ).join("\n");
+//     headers.join(",") +
+//     "\n" +
+//     rows.map((r: any[]) => r.map((v) => `"${v}"`).join(",")).join("\n");
 
-//   return new Response(csv, {
+//   return new NextResponse(csv, {
 //     headers: {
 //       "Content-Type": "text/csv",
 //       "Content-Disposition": "attachment; filename=members.csv",
@@ -21,23 +63,30 @@
 // }
 
 
+
+
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
+import { supabase } from "../../../../lib/supabase";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
-const membersPath = path.join(process.cwd(), "data/members.json");
+function escapeCSV(value: any) {
+  const text = value === null || value === undefined ? "" : String(value);
+  return `"${text.replace(/"/g, '""')}"`;
+}
 
 export async function GET() {
-  if (!fs.existsSync(membersPath)) {
-    return NextResponse.json({ error: "No members found" }, { status: 404 });
-  }
+  const { data, error } = await supabase
+    .from("members")
+    .select("*")
+    .order("created_at", { ascending: false });
 
-  const members = JSON.parse(fs.readFileSync(membersPath, "utf-8"));
-
-  if (!members.length) {
-    return NextResponse.json({ error: "No members found" }, { status: 404 });
+  if (error) {
+    return NextResponse.json(
+      { error: error.message },
+      { status: 500 }
+    );
   }
 
   const headers = [
@@ -46,39 +95,40 @@ export async function GET() {
     "Email",
     "Phone",
     "Address",
-    "Birthday Day",
-    "Birthday Month",
+    "Birth Day",
+    "Birth Month",
     "Anniversary",
     "Group",
     "Department",
-    "Active",
-    "Joined Date",
+    "Photo",
+    "Created At",
   ];
 
-  const rows = members.map((m: any) => [
+  const rows = (data || []).map((m: any) => [
     m.id,
     m.name,
-    m.email || "",
-    m.phone || "",
-    m.address || "",
-    m.birthDay || "",
-    m.birthMonth || "",
-    m.anniversary || "",
-    m.group || "",
-    m.department || "",
-    m.isActive ? "Yes" : "No",
-    m.createdAt,
+    m.email,
+    m.phone,
+    m.address,
+    m.birth_day,
+    m.birth_month,
+    m.anniversary,
+    m.group_name,
+    m.department,
+    m.photo,
+    m.created_at,
   ]);
 
-  const csv =
-    headers.join(",") +
-    "\n" +
-    rows.map((r: any[]) => r.map((v) => `"${v}"`).join(",")).join("\n");
+  const csv = [
+    headers.map(escapeCSV).join(","),
+    ...rows.map((row) => row.map(escapeCSV).join(",")),
+  ].join("\n");
 
   return new NextResponse(csv, {
     headers: {
-      "Content-Type": "text/csv",
+      "Content-Type": "text/csv; charset=utf-8",
       "Content-Disposition": "attachment; filename=members.csv",
+      "Cache-Control": "no-store",
     },
   });
 }

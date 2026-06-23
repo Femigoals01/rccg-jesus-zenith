@@ -1,21 +1,34 @@
 
 
 
-import fs from "fs";
-import path from "path";
-import { NextResponse } from "next/server";
 
-const inboxPath = path.join(process.cwd(), "data/inbox.json");
+
+import { NextResponse } from "next/server";
+import { supabase } from "../../../../../lib/supabase";
+
+export const runtime = "nodejs";
 
 export async function POST(req: Request) {
   const { id } = await req.json();
 
-  const data = JSON.parse(fs.readFileSync(inboxPath, "utf-8"));
-  const updated = data.map((m: any) =>
-    m.id === id ? { ...m, isPublic: !m.isPublic } : m
-  );
+  const { data, error: fetchError } = await supabase
+    .from("inbox")
+    .select("is_public")
+    .eq("id", id)
+    .single();
 
-  fs.writeFileSync(inboxPath, JSON.stringify(updated, null, 2));
+  if (fetchError || !data) {
+    return NextResponse.json({ error: "Message not found" }, { status: 404 });
+  }
+
+  const { error } = await supabase
+    .from("inbox")
+    .update({ is_public: !data.is_public })
+    .eq("id", id);
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 
   return NextResponse.json({ success: true });
 }

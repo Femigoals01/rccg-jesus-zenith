@@ -160,6 +160,7 @@ export default function Navbar() {
     { name: "Gallery", href: "/gallery" },
     { name: "Members Portal", href: "/membership" }, // ✅ NEW
     { name: "Contact", href: "/contact" },
+    { name: "Member Login", href: "/member-login" },
   ];
 
   return (

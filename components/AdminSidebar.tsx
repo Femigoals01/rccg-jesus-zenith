@@ -20,6 +20,12 @@ export default function AdminSidebar() {
     { name: "Testimonies", href: "/admin/testimonies" },
     { name: "Members", href: "/admin/members" },
     { name: "Inbox", href: "/admin/inbox" },
+
+      { name: "Attendance", href: "/admin/attendance" },
+    
+      { name: "Department Leaders", href: "/admin/department-leaders" },
+
+    
   ];
 
   return (
@@ -43,6 +49,8 @@ export default function AdminSidebar() {
           </Link>
         ))}
       </nav>
+
+      
 
       <button
         onClick={logout}

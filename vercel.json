@@ -1,0 +1,12 @@
+
+
+
+
+{
+  "crons": [
+    {
+      "path": "/api/cron/birthdays?secret=jesuszenith_birthdays_2026_secure_key_9XK7P2",
+      "schedule": "0 7 * * *"
+    }
+  ]
+}
