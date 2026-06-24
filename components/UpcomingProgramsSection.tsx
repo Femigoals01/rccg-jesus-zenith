@@ -8,14 +8,14 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const featuredProgram = {
-  title: "Zonal Relationship Conference",
-  dateLabel: "February 14, 2026",
-  startDate: "2026-01-24T08:30:00",
-  time: "8:30 AM",
+  title: "6 Months Anniversary",
+  dateLabel: "June 24, 2026",
+  startDate: "2026-06-24T08:30:00",
+  time: "5:00 PM",
   theme: "Relationship",
   description:
     "A focused gathering for youths and young adult and teenagers, marked by teaching, prayer, revival, and spiritual alignment.",
-  image: "/relationship.jpeg",
+  image: "/6mont.jpeg",
 };
 
 const upcomingPrograms = [
