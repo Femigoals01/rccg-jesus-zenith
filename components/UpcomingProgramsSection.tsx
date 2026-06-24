@@ -12,7 +12,7 @@ const featuredProgram = {
   dateLabel: "June 24, 2026",
   startDate: "2026-06-24T08:30:00",
   time: "5:00 PM",
-  theme: "Relationship",
+  theme: "Faithful God",
   description:
     "Giving thanks to God for all the marvelous things He has done in our lives through our praises and worship, ",
   image: "/6mont.jpeg",
