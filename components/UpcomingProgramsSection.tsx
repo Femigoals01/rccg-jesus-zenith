@@ -14,7 +14,7 @@ const featuredProgram = {
   time: "5:00 PM",
   theme: "Relationship",
   description:
-    "A focused gathering for youths and young adult and teenagers, marked by teaching, prayer, revival, and spiritual alignment.",
+    "Giving thanks to God for all the marvelous things He has done in our lives through our praises and worship, ",
   image: "/6mont.jpeg",
 };
 
