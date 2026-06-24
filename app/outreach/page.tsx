@@ -1,3 +1,8 @@
+
+
+
+
+
 import Image from "next/image";
 
 export default function OutreachGalleryPage() {
@@ -12,7 +17,7 @@ export default function OutreachGalleryPage() {
           Moments from our outreach and evangelism efforts.
         </p>
 
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {/* <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
           {Array.from({ length: 9 }).map((_, i) => (
             <div
               key={i}
@@ -26,7 +31,28 @@ export default function OutreachGalleryPage() {
               />
             </div>
           ))}
-        </div>
+        </div> */}
+
+
+
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+  {Array.from({ length: 38 }).map((_, i) => (
+    <div
+      key={i}
+      className="relative h-56 rounded-xl overflow-hidden"
+    >
+      <Image
+        src={`/outreach${i + 1}.jpg`}
+        alt={`Outreach Moment ${i + 1}`}
+        fill
+        className="object-cover"
+      />
+    </div>
+  ))}
+</div>
+
+
+
       </div>
     </section>
   );

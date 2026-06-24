@@ -1,5 +1,8 @@
 
 
+
+
+
 "use client";
 
 import { motion } from "framer-motion";
@@ -52,7 +55,7 @@ export default function OutreachSection() {
               </span>
             </p>
 
-            <h1 className="text-bold text-4xl  text-zenithGold">Watchout</h1>
+            {/* <h1 className="text-bold text-4xl  text-zenithGold">Watchout</h1> */}
 
             {/* CTA Buttons */}
             {/* <div className="flex flex-wrap gap-4">
@@ -118,16 +121,16 @@ export default function OutreachSection() {
           <div className="grid md:grid-cols-3 gap-8 text-zenithGold">
             {[
               {
-                title: "April Outreach",
-                desc: "Charity support and gospel outreach to local families.",
+                title: "May Outreach",
+                desc: "Food and Mediacl outreach to local families.",
               },
               {
                 title: "September Outreach",
-                desc: "Ophanage/Hospital/Prison Visitation.",
+                desc: "To be determined",
               },
               {
                 title: "December Outreach",
-                desc: "Street outreach.",
+                desc: "To be determined",
               },
             ].map((item) => (
               <div
