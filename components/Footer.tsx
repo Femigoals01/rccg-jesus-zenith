@@ -110,7 +110,7 @@ export default function Footer() {
         <div className="mt-16 border-t border-white/10 pt-8 flex flex-col gap-6 items-center md:flex-row md:justify-between">
 
           <p className="text-sm text-white/60 text-center">
-            © {new Date().getFullYear()} RCCG Jesus Zenith. All rights reserved.
+            © {new Date().getFullYear()} Insight Hub Solutions Limited. All rights reserved.
           </p>
 
           {/* Actions */}
