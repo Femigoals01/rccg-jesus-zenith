@@ -99,6 +99,7 @@
 
 
 
+// @ts-ignore: Allow side-effect CSS import in Next.js app router
 import "./globals.css";
 import type { Metadata } from "next";
 
