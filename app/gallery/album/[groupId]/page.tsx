@@ -1,61 +1,114 @@
-
-
-import cloudinary from "../../../../lib/cloudinary";
+import { notFound } from "next/navigation";
+import { supabase } from "../../../../lib/supabase";
 import AlbumClient from "./AlbumClient";
 
-/* ------------------ Helpers ------------------ */
-function parseContext(context: any) {
-  if (!context) return null;
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
-  if (typeof context === "object") {
-    return context.custom || context;
+type GalleryImage = {
+  id: string;
+  url: string;
+};
+
+type RawImage = {
+  id?: string;
+  public_id?: string;
+  publicId?: string;
+  url?: string;
+  secure_url?: string;
+  secureUrl?: string;
+};
+
+function normalizeImages(value: unknown): GalleryImage[] {
+  let parsed = value;
+
+  if (typeof parsed === "string") {
+    try {
+      parsed = JSON.parse(parsed);
+    } catch {
+      return [];
+    }
   }
 
-  if (typeof context === "string") {
-    return context.split("|").reduce((acc: any, pair: string) => {
-      const [key, value] = pair.split("=");
-      if (key && value) acc[key] = decodeURIComponent(value);
-      return acc;
-    }, {});
+  if (!Array.isArray(parsed)) {
+    return [];
   }
 
-  return null;
+  return parsed
+    .filter(
+      (item): item is RawImage =>
+        typeof item === "object" &&
+        item !== null &&
+        !Array.isArray(item)
+    )
+    .map((image) => ({
+      id:
+        image.id ??
+        image.public_id ??
+        image.publicId ??
+        "",
+      url:
+        image.url ??
+        image.secure_url ??
+        image.secureUrl ??
+        "",
+    }))
+    .filter((image) => Boolean(image.url));
 }
 
-export default async function AlbumPage(props: {
+export default async function AlbumPage({
+  params,
+}: {
   params: Promise<{ groupId: string }>;
 }) {
-  // ✅ Next.js 16: params are async
-  const { groupId } = await props.params;
+  const { groupId } = await params;
 
-  const { resources } = await cloudinary.search
-    .expression(
-      `folder:rccg-jesus-zenith/gallery AND tags:album_${groupId}`
-    )
-    .with_field("context")
-    .sort_by("created_at", "asc")
-    .max_results(200)
-    .execute();
+  const { data: album, error } = await supabase
+    .from("gallery_albums")
+    .select("*")
+    .eq("group_id", groupId)
+    .maybeSingle();
 
-  if (!resources || resources.length === 0) {
+  if (error) {
+    console.error("PUBLIC ALBUM FETCH ERROR:", error);
+
     return (
-      <div className="min-h-screen flex items-center justify-center bg-zenithDeep text-white">
-        Album not found.
-      </div>
+      <section className="flex min-h-screen items-center justify-center bg-zenithDeep px-6 text-center text-white">
+        <div>
+          <h1 className="text-2xl font-bold">
+            Unable to Load Album
+          </h1>
+
+          <p className="mt-3 text-white/60">
+            Something went wrong while loading this album.
+            Please try again shortly.
+          </p>
+
+          <a
+            href="/gallery"
+            className="mt-6 inline-block rounded-xl bg-zenithGold px-5 py-3 font-semibold text-black"
+          >
+            Back to Gallery
+          </a>
+        </div>
+      </section>
     );
   }
 
-  const meta = parseContext(resources[0].context);
+  if (!album) {
+    notFound();
+  }
+
+  const images = normalizeImages(album.images);
 
   return (
     <AlbumClient
-      title={meta?.title || ""}
-      description={meta?.description || ""}
-      eventDate={meta?.eventDate || ""}
-      images={resources.map((img: any) => ({
-        id: img.public_id,
-        url: img.secure_url,
-      }))}
+      groupId={album.group_id}
+      title={album.title || "Untitled Album"}
+      description={album.description || ""}
+      eventDate={album.event_date || ""}
+      images={images}
     />
   );
 }

@@ -11,7 +11,7 @@ export default function Navbar() {
 
   const links = [
     
-  { name: "Sovereign God", href: "/sovereign-god" },
+  // { name: "Sovereign God", href: "/sovereign-god" },
   { name: "About", href: "/#about" },
   { name: "Worship", href: "/#worship" },
     { name: "Ministries", href: "#ministries" },
